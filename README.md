@@ -2,6 +2,8 @@
 
 版本^1.0
 # Config配置、支持加载PHP文件
+版本^1.1
+# File、Log类
 
 ```php
 public function load(){} //加载文件
@@ -25,4 +27,21 @@ public static load() //加载文件.
 public static set() //设置.
 public static get() //获取.
 function env() //助手函数
+```
+
+```php
+$config = [
+    'time_format' => 'c',
+    //单独记录true | string
+    'single'      => false,
+    'file_size'   => 2097152,
+    'path'        => __DIR__,
+    //独立日志的类型warning|error
+    'apart_level' => [],
+    'json'        => false,
+];
+$Log = new \Colaphp\Utils\Log();
+$Log->init($config);
+$Log->notice('hello');
+$Log->save();
 ```
