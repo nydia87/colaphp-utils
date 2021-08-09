@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
@@ -8,286 +6,267 @@ declare(strict_types=1);
 namespace Colaphp\Utils;
 
 /**
- * 日志操作
+ * 日志操作.
  */
 class Log
 {
-    const EMERGENCY = 'emergency';
-    const ALERT     = 'alert';
-    const CRITICAL  = 'critical';
-    const ERROR     = 'error';
-    const WARNING   = 'warning';
-    const NOTICE    = 'notice';
-    const INFO      = 'info';
-    const DEBUG     = 'debug';
-    const SQL       = 'sql';
+	const EMERGENCY = 'emergency';
 
-    /**
-     * 日志信息
-     * @var array
-     */
-    protected $log = [];
+	const ALERT = 'alert';
 
-    /**
-     * 配置参数
-     * @var array
-     */
-    protected $config = [];
+	const CRITICAL = 'critical';
 
-    /**
-     * 日志写入驱动
-     * @var object
-     */
-    protected $driver;
+	const ERROR = 'error';
 
-    /**
-     * 日志授权key
-     * @var string
-     */
-    protected $key;
+	const WARNING = 'warning';
 
-    /**
-     * 日志初始化
-     * @access public
-     * @param  array $config
-     * @return $this
-     */
-    public function init($config = [])
-    {
-        $this->config = $config;
-        $this->driver = new File($config);
-        return $this;
-    }
+	const NOTICE = 'notice';
 
-    /**
-     * 获取日志信息
-     * @access public
-     * @param  string $type 信息类型
-     * @return array
-     */
-    public function getLog($type = '')
-    {
-        return $type ? $this->log[$type] : $this->log;
-    }
+	const INFO = 'info';
 
-    /**
-     * 记录日志信息
-     * @access public
-     * @param  mixed  $msg       日志信息
-     * @param  string $type      日志级别
-     * @param  array  $context   替换内容
-     * @return $this
-     */
-    public function record($msg, $type = 'info', array $context = [])
-    {
+	const DEBUG = 'debug';
 
-        if (is_string($msg) && !empty($context)) {
-            $replace = [];
-            foreach ($context as $key => $val) {
-                $replace['{' . $key . '}'] = $val;
-            }
+	const SQL = 'sql';
 
-            $msg = strtr($msg, $replace);
-        }
+	/**
+	 * 日志信息.
+	 * @var array
+	 */
+	protected $log = [];
 
-        if (PHP_SAPI == 'cli') {
-            // 命令行日志实时写入
-            $this->write($msg, $type, true);
-        } else {
-            $this->log[$type][] = $msg;
-        }
+	/**
+	 * 配置参数.
+	 * @var array
+	 */
+	protected $config = [];
 
-        return $this;
-    }
+	/**
+	 * 日志写入驱动.
+	 * @var object
+	 */
+	protected $driver;
 
-    /**
-     * 清空日志信息
-     * @access public
-     * @return $this
-     */
-    public function clear()
-    {
-        $this->log = [];
+	/**
+	 * 日志授权key.
+	 * @var string
+	 */
+	protected $key;
 
-        return $this;
-    }
+	/**
+	 * 日志初始化.
+	 * @param array $config
+	 * @return $this
+	 */
+	public function init($config = [])
+	{
+		$this->config = $config;
+		$this->driver = new File($config);
 
-    /**
-     * 保存调试信息
-     * @access public
-     * @return bool
-     */
-    public function save()
-    {
-        if (empty($this->log)) {
-            return true;
-        }
+		return $this;
+	}
 
-        $log = [];
+	/**
+	 * 获取日志信息.
+	 * @param string $type 信息类型
+	 * @return array
+	 */
+	public function getLog($type = '')
+	{
+		return $type ? $this->log[$type] : $this->log;
+	}
 
-        foreach ($this->log as $level => $info) {
-            if ('debug' == $level) {
-                continue;
-            }
+	/**
+	 * 记录日志信息.
+	 * @param mixed $msg 日志信息
+	 * @param string $type 日志级别
+	 * @param array $context 替换内容
+	 * @return $this
+	 */
+	public function record($msg, $type = 'info', array $context = [])
+	{
+		if (is_string($msg) && ! empty($context)) {
+			$replace = [];
+			foreach ($context as $key => $val) {
+				$replace['{' . $key . '}'] = $val;
+			}
 
-            if (empty($this->config['level']) || in_array($level, $this->config['level'])) {
-                $log[$level] = $info;
-            }
-        }
+			$msg = strtr($msg, $replace);
+		}
 
-        $result = $this->driver->save($log, true);
+		if (PHP_SAPI == 'cli') {
+			// 命令行日志实时写入
+			$this->write($msg, $type, true);
+		} else {
+			$this->log[$type][] = $msg;
+		}
 
-        if ($result) {
-            $this->log = [];
-        }
+		return $this;
+	}
 
-        return $result;
-    }
+	/**
+	 * 清空日志信息.
+	 * @return $this
+	 */
+	public function clear()
+	{
+		$this->log = [];
 
-    /**
-     * 实时写入日志信息
-     * @access public
-     * @param  mixed  $msg   调试信息
-     * @param  string $type  日志级别
-     * @param  bool   $force 是否强制写入
-     * @return bool
-     */
-    public function write($msg, $type = 'info', $force = false)
-    {
-        // 封装日志信息
-        if (empty($this->config['level'])) {
-            $force = true;
-        }
+		return $this;
+	}
 
-        if (true === $force || in_array($type, $this->config['level'])) {
-            $log[$type][] = $msg;
-        } else {
-            return false;
-        }
+	/**
+	 * 保存调试信息.
+	 * @return bool
+	 */
+	public function save()
+	{
+		if (empty($this->log)) {
+			return true;
+		}
 
-        // 写入日志
-        return $this->driver->save($log, false);
-    }
+		$log = [];
 
-    /**
-     * 记录日志信息
-     * @access public
-     * @param  string $level     日志级别
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function log($level, $message, array $context = [])
-    {
-        $this->record($message, $level, $context);
-    }
+		foreach ($this->log as $level => $info) {
+			if ($level == 'debug') {
+				continue;
+			}
 
-    /**
-     * 记录emergency信息
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function emergency($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+			if (empty($this->config['level']) || in_array($level, $this->config['level'])) {
+				$log[$level] = $info;
+			}
+		}
 
-    /**
-     * 记录警报信息
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function alert($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+		$result = $this->driver->save($log, true);
 
-    /**
-     * 记录紧急情况
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function critical($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+		if ($result) {
+			$this->log = [];
+		}
 
-    /**
-     * 记录错误信息
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function error($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+		return $result;
+	}
 
-    /**
-     * 记录warning信息
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function warning($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+	/**
+	 * 实时写入日志信息.
+	 * @param mixed $msg 调试信息
+	 * @param string $type 日志级别
+	 * @param bool $force 是否强制写入
+	 * @return bool
+	 */
+	public function write($msg, $type = 'info', $force = false)
+	{
+		// 封装日志信息
+		if (empty($this->config['level'])) {
+			$force = true;
+		}
 
-    /**
-     * 记录notice信息
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function notice($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+		if ($force === true || in_array($type, $this->config['level'])) {
+			$log[$type][] = $msg;
+		} else {
+			return false;
+		}
 
-    /**
-     * 记录一般信息
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function info($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+		// 写入日志
+		return $this->driver->save($log, false);
+	}
 
-    /**
-     * 记录调试信息
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function debug($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+	/**
+	 * 记录日志信息.
+	 * @param string $level 日志级别
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function log($level, $message, array $context = [])
+	{
+		$this->record($message, $level, $context);
+	}
 
-    /**
-     * 记录sql信息
-     * @access public
-     * @param  mixed  $message   日志信息
-     * @param  array  $context   替换内容
-     * @return void
-     */
-    public function sql($message, array $context = [])
-    {
-        $this->log(__FUNCTION__, $message, $context);
-    }
+	/**
+	 * 记录emergency信息.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function emergency($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
 
+	/**
+	 * 记录警报信息.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function alert($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
+
+	/**
+	 * 记录紧急情况.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function critical($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
+
+	/**
+	 * 记录错误信息.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function error($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
+
+	/**
+	 * 记录warning信息.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function warning($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
+
+	/**
+	 * 记录notice信息.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function notice($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
+
+	/**
+	 * 记录一般信息.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function info($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
+
+	/**
+	 * 记录调试信息.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function debug($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
+
+	/**
+	 * 记录sql信息.
+	 * @param mixed $message 日志信息
+	 * @param array $context 替换内容
+	 */
+	public function sql($message, array $context = [])
+	{
+		$this->log(__FUNCTION__, $message, $context);
+	}
 }

@@ -1,12 +1,8 @@
 <?php
-
-declare(strict_types=1);
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
  */
-// 助手函数
-
 use Colaphp\Utils\Config;
 use Colaphp\Utils\Debug;
 use Colaphp\Utils\Env;
@@ -21,6 +17,7 @@ if (! function_exists('class_basename')) {
 	function class_basename($class)
 	{
 		$class = is_object($class) ? get_class($class) : $class;
+
 		return basename(str_replace('\\', '/', $class));
 	}
 }
@@ -37,6 +34,7 @@ if (! function_exists('config')) {
 		if (is_null($value) && is_string($name)) {
 			return Config::get($name);
 		}
+
 		return Config::set($name, $value);
 	}
 }
@@ -86,6 +84,7 @@ if (! function_exists('parse_name')) {
 
 			return $ucfirst ? ucfirst($name) : lcfirst($name);
 		}
+
 		return strtolower(trim(preg_replace('/[A-Z]/', '_\\0', $name), '_'));
 	}
 }
@@ -111,12 +110,14 @@ if (! function_exists('redirect')) {
 				header("refresh:{$time};url={$url}");
 				echo $msg;
 			}
+
 			exit();
 		}
 		$str = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
 		if ($time != 0) {
 			$str .= $msg;
 		}
+
 		exit($str);
 	}
 }
@@ -135,6 +136,7 @@ if (! function_exists('xml_encode')) {
 		$xml .= '<' . $root . '>';
 		$xml .= data_to_xml($data);
 		$xml .= '</' . $root . '>';
+
 		return $xml;
 	}
 }
@@ -155,6 +157,7 @@ if (! function_exists('cola_return')) {
 			[$key, ] = explode(' ', $key);
 			$xml .= "</{$key}>";
 		}
+
 		return $xml;
 	}
 }
@@ -173,6 +176,7 @@ if (! function_exists('cola_return')) {
 		if (! empty($data)) {
 			$return['data'] = $data;
 		}
+
 		return $return;
 	}
 }
@@ -187,19 +191,27 @@ if (! function_exists('cola_return_http')) {
 	function cola_return_http($result = [], $type = 'JSON')
 	{
 		$type = strtoupper($type);
+
 		switch ($type) {
 			case 'XML':// 返回xml格式数据
-				header('Content-Type:text/xml; charset=utf-8'); exit(xml_encode($result));
+				header('Content-Type:text/xml; charset=utf-8');
+
+exit(xml_encode($result));
+
 				break;
 			case 'EVAL':
 				header('Content-Type:text/html; charset=utf-8');
+
 				exit($result);
+
 				break;
 			case 'JSON'://JSON
 			default:
 				header('Content-Type:text/html; charset=utf-8');
+
 				exit(json_encode($result));
 		}
+
 		exit;
 	}
 }

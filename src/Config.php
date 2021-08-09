@@ -1,6 +1,4 @@
 <?php
-
-declare(strict_types=1);
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
@@ -34,6 +32,7 @@ class Config
 				return self::set(include $file, $name);
 			}
 		}
+
 		return self::$config;
 	}
 
@@ -66,6 +65,7 @@ class Config
 				return $default;
 			}
 		}
+
 		return $config;
 	}
 
@@ -89,6 +89,7 @@ class Config
 			} else {
 				self::$config[strtolower($name[0])][$name[1]][$name[2]] = $value;
 			}
+
 			return $value;
 		}
 		if (is_array($name)) {
@@ -108,6 +109,7 @@ class Config
 			// 为空直接返回 已有配置
 			$result = self::$config;
 		}
+
 		return $result;
 	}
 
