@@ -141,7 +141,7 @@ if (! function_exists('xml_encode')) {
 	}
 }
 
-if (! function_exists('cola_return')) {
+if (! function_exists('data_to_xml')) {
 	/**
 	 * XML编码 data.
 	 *
@@ -154,7 +154,7 @@ if (! function_exists('cola_return')) {
 			is_numeric($key) && $key = "item id=\"{$key}\"";
 			$xml .= "<{$key}>";
 			$xml .= (is_array($val) || is_object($val)) ? data_to_xml($val) : $val;
-			[$key, ] = explode(' ', $key);
+			$key = current(explode(' ', $key));
 			$xml .= "</{$key}>";
 		}
 
@@ -195,8 +195,8 @@ if (! function_exists('cola_return_http')) {
 		switch ($type) {
 			case 'XML':// 返回xml格式数据
 				header('Content-Type:text/xml; charset=utf-8');
-
-exit(xml_encode($result));
+				
+				exit(xml_encode($result));
 
 				break;
 			case 'EVAL':
