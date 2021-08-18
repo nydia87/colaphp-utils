@@ -195,7 +195,7 @@ if (! function_exists('cola_return_http')) {
 		switch ($type) {
 			case 'XML':// 返回xml格式数据
 				header('Content-Type:text/xml; charset=utf-8');
-				
+
 				exit(xml_encode($result));
 
 				break;
@@ -213,5 +213,24 @@ if (! function_exists('cola_return_http')) {
 		}
 
 		exit;
+	}
+}
+
+if (! function_exists('mk_dir')) {
+	/**
+	 * 循环创建目录.
+	 *
+	 * @param string $dir
+	 * @param int $mode
+	 */
+	function mk_dir($dir = '', $mode = 0777)
+	{
+		if (is_dir($dir) || @mkdir($dir, $mode)) {
+			return true;
+		}
+		if (! mk_dir(dirname($dir), $mode)) {
+			return false;
+		}
+		return @mkdir($dir, $mode);
 	}
 }

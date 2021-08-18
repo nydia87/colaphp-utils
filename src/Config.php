@@ -29,7 +29,7 @@ class Config
 		if (is_file($file)) {
 			$type = pathinfo($file, PATHINFO_EXTENSION);
 			if ($type == 'php') {
-				return self::set(include $file, $name);
+				return self::set($name, include $file);
 			}
 		}
 
