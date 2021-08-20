@@ -6,6 +6,10 @@
 use Colaphp\Utils\Config;
 use Colaphp\Utils\Debug;
 use Colaphp\Utils\Env;
+use Colaphp\Utils\Verify;
+
+//包路径
+define('COLAPHP_UTILS_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 if (! function_exists('class_basename')) {
 	/**
@@ -232,5 +236,66 @@ if (! function_exists('mk_dir')) {
 			return false;
 		}
 		return @mkdir($dir, $mode);
+	}
+}
+
+if (! function_exists('regex')) {
+	/**
+	 * 使用正则验证数据.
+	 *
+	 * @param string $value 字段值
+	 * @param string $rule 验证规则 正则规则或者预定义正则名
+	 */
+	function regex($value, $rule)
+	{
+		$regexs = [
+			'alphaDash' => '/^[A-Za-z0-9\-\_]+$/', //字母和数字，下划线_及破折号-
+			'chs' => '/^[\x{4e00}-\x{9fa5}]+$/u', //汉字
+			'chsAlpha' => '/^[\x{4e00}-\x{9fa5}a-zA-Z]+$/u', //汉字、字母
+			'chsAlphaNum' => '/^[\x{4e00}-\x{9fa5}a-zA-Z0-9]+$/u', //汉字、字母和数字
+			'chsDash' => '/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-]+$/u', //汉字、字母、数字和下划线_及破折号-
+			'mobile' => '/^1[3-9][0-9]\d{8}$/',
+			'idCard' => '/(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/',
+			'zip' => '/\d{6}/',
+		];
+
+		if (isset($regexs[$rule])) {
+			$rule = $regexs[$rule];
+		}
+
+		if (strpos($rule, '/') !== 0 && ! preg_match('/\/[imsU]{0,4}$/', $rule)) {
+			// 不是正则表达式则两端补上/
+			$rule = '/^' . $rule . '$/';
+		}
+
+		return is_scalar($value) && preg_match($rule, (string) $value) === 1;
+	}
+}
+
+if (! function_exists('cola_verify')) {
+	/**
+	 * 生成图片验证码
+	 *
+	 * @param string $id
+	 * @param array $config
+	 */
+	function cola_verify($id = '', $config = [])
+	{
+		$verfiy = new Verify($config);
+		$verfiy->entry($id);
+	}
+}
+
+if (! function_exists('cola_verify_check')) {
+	/**
+	 * 核对验证码
+	 *
+	 * @param string $code
+	 * @param string $id
+	 */
+	function cola_verify_check($code = '', $id = '')
+	{
+		$verfiy = new Verify();
+		return $verfiy->check($code, $id);
 	}
 }

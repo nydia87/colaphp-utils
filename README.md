@@ -3,7 +3,9 @@
 版本^1.0
 # Config配置、支持加载PHP文件
 版本^1.1
-# File、Log类
+# Log日志、File文件
+版本^1.2
+# Upload上传、Image图片、Verify验证码、Base64加密
 
 ```php
 public function load(){} //加载文件
