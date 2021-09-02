@@ -170,7 +170,7 @@ class Verify
 		$secode['verify_code'] = $code; // 把校验码保存到session
 		$secode['verify_time'] = time();  // 验证码创建时间
 
-		$sessionId = $_REQUEST['sessionId'];
+		$sessionId = isset($_REQUEST['sessionId']) ? $_REQUEST['sessionId'] : false;
 		if ($sessionId) {
 			session_id($sessionId);
 		}
