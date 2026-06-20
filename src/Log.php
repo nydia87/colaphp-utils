@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace Colaphp\Utils;
 
 /**
@@ -10,23 +12,23 @@ namespace Colaphp\Utils;
  */
 class Log
 {
-	const EMERGENCY = 'emergency';
+	public const EMERGENCY = 'emergency';
 
-	const ALERT = 'alert';
+	public const ALERT = 'alert';
 
-	const CRITICAL = 'critical';
+	public const CRITICAL = 'critical';
 
-	const ERROR = 'error';
+	public const ERROR = 'error';
 
-	const WARNING = 'warning';
+	public const WARNING = 'warning';
 
-	const NOTICE = 'notice';
+	public const NOTICE = 'notice';
 
-	const INFO = 'info';
+	public const INFO = 'info';
 
-	const DEBUG = 'debug';
+	public const DEBUG = 'debug';
 
-	const SQL = 'sql';
+	public const SQL = 'sql';
 
 	/**
 	 * 日志信息.

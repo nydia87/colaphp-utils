@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace Colaphp\Utils\Image;
 
 /**
@@ -71,7 +73,7 @@ class Decoder
 	public function readExtensions()
 	{
 		$this->getByte(1);
-		for (;;) {
+		while (true) {
 			$this->getByte(1);
 			if (($u = $this->GIF_buffer[0]) == 0x00) {
 				break;
@@ -115,7 +117,7 @@ class Decoder
 		$this->putByte($GIF_screen);
 		$this->getByte(1);
 		$this->putByte($this->GIF_buffer);
-		for (;;) {
+		while (true) {
 			$this->getByte(1);
 			$this->putByte($this->GIF_buffer);
 			if (($u = $this->GIF_buffer[0]) == 0x00) {

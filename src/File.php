@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace Colaphp\Utils;
 
 /**
@@ -10,14 +12,14 @@ namespace Colaphp\Utils;
  */
 class File
 {
-	//配置信息
+	// 配置信息
 	protected $config = [
 		'time_format' => 'c',
-		//单独记录true | string
+		// 单独记录true | string
 		'single' => false,
 		'file_size' => 2097152,
 		'path' => '',
-		//独立日志的类型warning|error
+		// 独立日志的类型warning|error
 		'apart_level' => [],
 		'json' => false,
 	];

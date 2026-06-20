@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace Colaphp\Utils;
 
 /**
@@ -12,7 +14,6 @@ class Base64
 {
 	/**
 	 * 加密字符串.
-	 * @param string $str 字符串
 	 * @param string $key 加密key
 	 * @param int $expire 有效期（秒）
 	 * @param mixed $data
@@ -37,14 +38,13 @@ class Base64
 		}
 
 		for ($i = 0; $i < $len; ++$i) {
-			$str .= chr(ord(substr($data, $i, 1)) + (ord(substr($char, $i, 1))) % 256);
+			$str .= chr(ord(substr($data, $i, 1)) + ord(substr($char, $i, 1)) % 256);
 		}
 		return $str;
 	}
 
 	/**
 	 * 解密字符串.
-	 * @param string $str 字符串
 	 * @param string $key 加密key
 	 * @param mixed $data
 	 * @return string

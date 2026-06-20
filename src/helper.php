@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
@@ -8,7 +9,7 @@ use Colaphp\Utils\Debug;
 use Colaphp\Utils\Env;
 use Colaphp\Utils\Verify;
 
-//包路径
+// 包路径
 define('COLAPHP_UTILS_PATH', dirname(__FILE__) . DIRECTORY_SEPARATOR);
 
 if (! function_exists('class_basename')) {
@@ -89,7 +90,7 @@ if (! function_exists('parse_name')) {
 			return $ucfirst ? ucfirst($name) : lcfirst($name);
 		}
 
-		return strtolower(trim(preg_replace('/[A-Z]/', '_\\0', $name), '_'));
+		return strtolower(trim(preg_replace('/[A-Z]/', '_\0', $name), '_'));
 	}
 }
 
@@ -101,7 +102,7 @@ if (! function_exists('redirect')) {
 	 */
 	function redirect($url, $time = 0, $msg = '')
 	{
-		//多行URL地址支持
+		// 多行URL地址支持
 		$url = str_replace(["\n", "\r"], '', $url);
 		if (empty($msg)) {
 			$msg = "系统将在{$time}秒之后自动跳转到{$url}！";
@@ -115,7 +116,7 @@ if (! function_exists('redirect')) {
 				echo $msg;
 			}
 
-			exit();
+			exit;
 		}
 		$str = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
 		if ($time != 0) {
@@ -209,7 +210,7 @@ if (! function_exists('cola_return_http')) {
 				exit($result);
 
 				break;
-			case 'JSON'://JSON
+			case 'JSON':// JSON
 			default:
 				header('Content-Type:text/html; charset=utf-8');
 
@@ -249,11 +250,11 @@ if (! function_exists('regex')) {
 	function regex($value, $rule)
 	{
 		$regexs = [
-			'alphaDash' => '/^[A-Za-z0-9\-\_]+$/', //字母和数字，下划线_及破折号-
-			'chs' => '/^[\x{4e00}-\x{9fa5}]+$/u', //汉字
-			'chsAlpha' => '/^[\x{4e00}-\x{9fa5}a-zA-Z]+$/u', //汉字、字母
-			'chsAlphaNum' => '/^[\x{4e00}-\x{9fa5}a-zA-Z0-9]+$/u', //汉字、字母和数字
-			'chsDash' => '/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-]+$/u', //汉字、字母、数字和下划线_及破折号-
+			'alphaDash' => '/^[A-Za-z0-9\-\_]+$/', // 字母和数字，下划线_及破折号-
+			'chs' => '/^[\x{4e00}-\x{9fa5}]+$/u', // 汉字
+			'chsAlpha' => '/^[\x{4e00}-\x{9fa5}a-zA-Z]+$/u', // 汉字、字母
+			'chsAlphaNum' => '/^[\x{4e00}-\x{9fa5}a-zA-Z0-9]+$/u', // 汉字、字母和数字
+			'chsDash' => '/^[\x{4e00}-\x{9fa5}a-zA-Z0-9\_\-]+$/u', // 汉字、字母、数字和下划线_及破折号-
 			'mobile' => '/^1[3-9][0-9]\d{8}$/',
 			'idCard' => '/(^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$)|(^[1-9]\d{5}\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{2}$)/',
 			'zip' => '/\d{6}/',
@@ -300,28 +301,30 @@ if (! function_exists('cola_verify_check')) {
 	}
 }
 
-
 if (! function_exists('get_client_ip')) {
 	/**
 	 * 获取客户端IP地址
-	 *
-	 * @return void
 	 */
-	function get_client_ip() {
-		static $ip = NULL;
-		if ($ip !== NULL) return $ip;
+	function get_client_ip()
+	{
+		static $ip = null;
+		if ($ip !== null) {
+			return $ip;
+		}
 		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			$arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-			$pos =  array_search('unknown',$arr);
-			if(false !== $pos) unset($arr[$pos]);
-			$ip   =  trim($arr[0]);
-		}elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
+			$pos = array_search('unknown', $arr);
+			if ($pos !== false) {
+				unset($arr[$pos]);
+			}
+			$ip = trim($arr[0]);
+		} elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
 			$ip = $_SERVER['HTTP_CLIENT_IP'];
-		}elseif (isset($_SERVER['REMOTE_ADDR'])) {
+		} elseif (isset($_SERVER['REMOTE_ADDR'])) {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 		// IP地址合法验证
-		$ip = (false !== ip2long($ip)) ? $ip : '0.0.0.0';
+		$ip = (ip2long($ip) !== false) ? $ip : '0.0.0.0';
 		return $ip;
 	}
 }

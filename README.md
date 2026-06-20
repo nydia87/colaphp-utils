@@ -1,11 +1,12 @@
 # colaphp-util
 
-版本^1.0
-# Config配置、支持加载PHP文件
-版本^1.1
-# Log日志、File文件
-版本^1.2
-# Upload上传、Image图片、Verify验证码、Base64加密
+## 概述
+
+工具包
+
+## 使用
+
+### 1、配置
 
 ```php
 public function load(){} //加载文件
@@ -15,14 +16,14 @@ public function remove(){} //移除
 function config() //助手函数
 ```
 
-# Debug调试
+### 2、Debug调试
 
 ```php
 public static dump() //友好的变量输出.
 function dump() //助手函数
 ```
 
-# Env环境变量、支持加载ini、env文件
+### 3、Env环境变量、支持加载ini、env文件
 
 ```php
 public static load() //加载文件.
@@ -47,3 +48,10 @@ $Log->init($config);
 $Log->notice('hello');
 $Log->save();
 ```
+
+## 更新说明
+
+|    版本   |    更新日期   |    说明              |
+|:---------|:------------:|:---------------------|
+| v1.2.3   |  2026.06.20  | 格式化代码            |
+| v1.0.0   |  2021.07.30  | 基本功能              |

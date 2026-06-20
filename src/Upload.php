@@ -1,13 +1,13 @@
 <?php
+
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace Colaphp\Utils;
 
-use SplFileObject;
-
-class Upload extends SplFileObject
+class Upload extends \SplFileObject
 {
 	/**
 	 * 当前完整文件名.
@@ -314,7 +314,7 @@ class Upload extends SplFileObject
 	public function getError()
 	{
 		if (is_array($this->error)) {
-			list($msg, $vars) = $this->error;
+			[$msg, $vars] = $this->error;
 		} else {
 			$msg = $this->error;
 			$vars = [];

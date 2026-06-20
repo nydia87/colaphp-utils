@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace Colaphp\Utils\Image;
 
 /**
@@ -49,8 +51,8 @@ class Encoder
 		}
 		$this->LOP = ($GIF_lop > -1) ? $GIF_lop : 0;
 		$this->DIS = ($GIF_dis > -1) ? (($GIF_dis < 3) ? $GIF_dis : 3) : 2;
-		$this->COL = ($GIF_red > -1 && $GIF_grn > -1 && $GIF_blu > -1) ?
-			($GIF_red | ($GIF_grn << 8) | ($GIF_blu << 16)) : -1;
+		$this->COL = ($GIF_red > -1 && $GIF_grn > -1 && $GIF_blu > -1)
+			? ($GIF_red | ($GIF_grn << 8) | ($GIF_blu << 16)) : -1;
 		for ($i = 0; $i < count($GIF_src); ++$i) {
 			if (strtolower($GIF_mod) == 'url') {
 				$this->BUF[] = fread(fopen($GIF_src[$i], 'rb'), filesize($GIF_src[$i]));
@@ -67,8 +69,8 @@ class Encoder
 			for ($j = (13 + 3 * (2 << (ord($this->BUF[$i][10]) & 0x07))), $k = true; $k; ++$j) {
 				switch ($this->BUF[$i][$j]) {
 					case '!':
-						if ((substr($this->BUF[$i], ($j + 3), 8)) == 'NETSCAPE') {
-							printf('%s: %s ( %s source )!', $this->VER, $this->ERR['ERR03'], ($i + 1));
+						if (substr($this->BUF[$i], $j + 3, 8) == 'NETSCAPE') {
+							printf('%s: %s ( %s source )!', $this->VER, $this->ERR['ERR03'], $i + 1);
 							exit(0);
 						}
 						break;
@@ -113,8 +115,8 @@ class Encoder
 			13,
 			3 * (2 << (ord($this->BUF[$i][10]) & 0x07))
 		);
-		$Locals_ext = "!\xF9\x04" . chr(($this->DIS << 2) + 0) .
-			chr(($d >> 0) & 0xFF) . chr(($d >> 8) & 0xFF) . "\x0\x0";
+		$Locals_ext = "!\xF9\x04" . chr(($this->DIS << 2) + 0)
+			. chr(($d >> 0) & 0xFF) . chr(($d >> 8) & 0xFF) . "\x0\x0";
 		if ($this->COL > -1 && ord($this->BUF[$i][10]) & 0x80) {
 			for ($j = 0; $j < (2 << (ord($this->BUF[$i][10]) & 0x07)); ++$j) {
 				if (
@@ -122,8 +124,8 @@ class Encoder
 					&& ord($Locals_rgb[3 * $j + 1]) == (($this->COL >> 8) & 0xFF)
 					&& ord($Locals_rgb[3 * $j + 2]) == (($this->COL >> 0) & 0xFF)
 				) {
-					$Locals_ext = "!\xF9\x04" . chr(($this->DIS << 2) + 1) .
-						chr(($d >> 0) & 0xFF) . chr(($d >> 8) & 0xFF) . chr($j) . "\x0";
+					$Locals_ext = "!\xF9\x04" . chr(($this->DIS << 2) + 1)
+						. chr(($d >> 0) & 0xFF) . chr(($d >> 8) & 0xFF) . chr($j) . "\x0";
 					break;
 				}
 			}

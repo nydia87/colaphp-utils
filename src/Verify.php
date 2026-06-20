@@ -1,8 +1,10 @@
 <?php
+
 /**
  * @contact  nydia87 <349196713@qq.com>
  * @license  http://www.apache.org/licenses/LICENSE-2.0
  */
+
 namespace Colaphp\Utils;
 
 class Verify
@@ -251,7 +253,7 @@ class Verify
 	{
 		$codeSet = '2345678abcdefhijkmnpqrstuvwxyz';
 		for ($i = 0; $i < 10; ++$i) {
-			//杂点颜色
+			// 杂点颜色
 			$noiseColor = imagecolorallocate($this->_image, mt_rand(150, 225), mt_rand(150, 225), mt_rand(150, 225));
 			for ($j = 0; $j < 5; ++$j) {
 				// 绘杂点
@@ -279,7 +281,7 @@ class Verify
 
 		$gb = $bgs[array_rand($bgs)];
 
-		list($width, $height) = @getimagesize($gb);
+		[$width, $height] = @getimagesize($gb);
 		// Resample
 		$bgImage = @imagecreatefromjpeg($gb);
 		@imagecopyresampled($this->_image, $bgImage, 0, 0, 0, 0, $this->imageW, $this->imageH, $width, $height);
