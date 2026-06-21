@@ -1,8 +1,7 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 use Colaphp\Utils\Config;
 use Colaphp\Utils\Debug;
@@ -17,6 +16,7 @@ if (! function_exists('class_basename')) {
 	 * 获取类名(不包含命名空间).
 	 *
 	 * @param object|string $class
+	 *
 	 * @return string
 	 */
 	function class_basename($class)
@@ -30,8 +30,10 @@ if (! function_exists('class_basename')) {
 if (! function_exists('config')) {
 	/**
 	 * 获取和设置配置参数.
-	 * @param array|string $name 参数名
-	 * @param mixed $value 参数值
+	 *
+	 * @param array|string $name  参数名
+	 * @param mixed        $value 参数值
+	 *
 	 * @return mixed
 	 */
 	function config($name = '', $value = null)
@@ -47,9 +49,11 @@ if (! function_exists('config')) {
 if (! function_exists('dump')) {
 	/**
 	 * 浏览器友好的变量输出.
-	 * @param mixed $var 变量
-	 * @param bool $echo 是否输出 默认为true 如果为false 则返回输出字符串
+	 *
+	 * @param mixed  $var   变量
+	 * @param bool   $echo  是否输出 默认为true 如果为false 则返回输出字符串
 	 * @param string $label 标签 默认为空
+	 *
 	 * @return string|void
 	 */
 	function dump($var, $echo = true, $label = null)
@@ -61,8 +65,10 @@ if (! function_exists('dump')) {
 if (! function_exists('env')) {
 	/**
 	 * 获取环境变量值
-	 * @param string $name 环境变量名（支持二级 .号分割）
+	 *
+	 * @param string $name    环境变量名（支持二级 .号分割）
 	 * @param string $default 默认值
+	 *
 	 * @return mixed
 	 */
 	function env($name = null, $default = null)
@@ -75,9 +81,11 @@ if (! function_exists('parse_name')) {
 	/**
 	 * 字符串命名风格转换
 	 * type 0 将Java风格转换为C的风格 1 将C风格转换为Java的风格
-	 * @param string $name 字符串
-	 * @param int $type 转换类型
-	 * @param bool $ucfirst 首字母是否大写（驼峰规则）
+	 *
+	 * @param string $name    字符串
+	 * @param int    $type    转换类型
+	 * @param bool   $ucfirst 首字母是否大写（驼峰规则）
+	 *
 	 * @return string
 	 */
 	function parse_name($name, $type = 0, $ucfirst = true)
@@ -96,7 +104,7 @@ if (! function_exists('parse_name')) {
 
 if (! function_exists('redirect')) {
 	/**
-	 * @param mixed $url 重定向地址
+	 * @param mixed $url  重定向地址
 	 * @param mixed $time
 	 * @param mixed $msg
 	 */
@@ -109,7 +117,7 @@ if (! function_exists('redirect')) {
 		}
 		if (! headers_sent()) {
 			// redirect
-			if ($time === 0) {
+			if (0 === $time) {
 				header('Location: ' . $url);
 			} else {
 				header("refresh:{$time};url={$url}");
@@ -119,7 +127,7 @@ if (! function_exists('redirect')) {
 			exit;
 		}
 		$str = "<meta http-equiv='Refresh' content='{$time};URL={$url}'>";
-		if ($time != 0) {
+		if (0 != $time) {
 			$str .= $msg;
 		}
 
@@ -131,7 +139,7 @@ if (! function_exists('xml_encode')) {
 	/**
 	 * XML编码
 	 *
-	 * @param array $data
+	 * @param array  $data
 	 * @param string $encoding
 	 * @param string $root
 	 */
@@ -172,8 +180,8 @@ if (! function_exists('cola_return')) {
 	 * 返回Array结构.
 	 *
 	 * @param string $msg
-	 * @param int $status
-	 * @param array $data
+	 * @param int    $status
+	 * @param array  $data
 	 */
 	function cola_return($msg = '', $status = -1, $data = [])
 	{
@@ -190,7 +198,7 @@ if (! function_exists('cola_return_http')) {
 	/**
 	 * 返回数据到客户端.
 	 *
-	 * @param array $result
+	 * @param array  $result
 	 * @param string $type
 	 */
 	function cola_return_http($result = [], $type = 'JSON')
@@ -226,7 +234,7 @@ if (! function_exists('mk_dir')) {
 	 * 循环创建目录.
 	 *
 	 * @param string $dir
-	 * @param int $mode
+	 * @param int    $mode
 	 */
 	function mk_dir($dir = '', $mode = 0777)
 	{
@@ -236,6 +244,7 @@ if (! function_exists('mk_dir')) {
 		if (! mk_dir(dirname($dir), $mode)) {
 			return false;
 		}
+
 		return @mkdir($dir, $mode);
 	}
 }
@@ -245,7 +254,7 @@ if (! function_exists('regex')) {
 	 * 使用正则验证数据.
 	 *
 	 * @param string $value 字段值
-	 * @param string $rule 验证规则 正则规则或者预定义正则名
+	 * @param string $rule  验证规则 正则规则或者预定义正则名
 	 */
 	function regex($value, $rule)
 	{
@@ -264,12 +273,12 @@ if (! function_exists('regex')) {
 			$rule = $regexs[$rule];
 		}
 
-		if (strpos($rule, '/') !== 0 && ! preg_match('/\/[imsU]{0,4}$/', $rule)) {
+		if (0 !== strpos($rule, '/') && ! preg_match('/\/[imsU]{0,4}$/', $rule)) {
 			// 不是正则表达式则两端补上/
 			$rule = '/^' . $rule . '$/';
 		}
 
-		return is_scalar($value) && preg_match($rule, (string) $value) === 1;
+		return is_scalar($value) && 1 === preg_match($rule, (string) $value);
 	}
 }
 
@@ -278,7 +287,7 @@ if (! function_exists('cola_verify')) {
 	 * 生成图片验证码
 	 *
 	 * @param string $id
-	 * @param array $config
+	 * @param array  $config
 	 */
 	function cola_verify($id = '', $config = [])
 	{
@@ -297,6 +306,7 @@ if (! function_exists('cola_verify_check')) {
 	function cola_verify_check($code = '', $id = '')
 	{
 		$verfiy = new Verify();
+
 		return $verfiy->check($code, $id);
 	}
 }
@@ -308,13 +318,13 @@ if (! function_exists('get_client_ip')) {
 	function get_client_ip()
 	{
 		static $ip = null;
-		if ($ip !== null) {
+		if (null !== $ip) {
 			return $ip;
 		}
 		if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
 			$arr = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
 			$pos = array_search('unknown', $arr);
-			if ($pos !== false) {
+			if (false !== $pos) {
 				unset($arr[$pos]);
 			}
 			$ip = trim($arr[0]);
@@ -324,7 +334,8 @@ if (! function_exists('get_client_ip')) {
 			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 		// IP地址合法验证
-		$ip = (ip2long($ip) !== false) ? $ip : '0.0.0.0';
+		$ip = (false !== ip2long($ip)) ? $ip : '0.0.0.0';
+
 		return $ip;
 	}
 }

@@ -1,8 +1,7 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils;
@@ -11,42 +10,49 @@ class Upload extends \SplFileObject
 {
 	/**
 	 * 当前完整文件名.
+	 *
 	 * @var string
 	 */
 	protected $filename;
 
 	/**
 	 * 上传文件名.
+	 *
 	 * @var string
 	 */
 	protected $saveName;
 
 	/**
 	 * 上传文件命名规则.
+	 *
 	 * @var string
 	 */
 	protected $rule = 'date';
 
 	/**
 	 * 上传文件验证规则.
+	 *
 	 * @var array
 	 */
 	protected $validate = [];
 
 	/**
 	 * 上传文件信息.
+	 *
 	 * @var array
 	 */
 	protected $info = [];
 
 	/**
 	 * 文件hash规则.
+	 *
 	 * @var array
 	 */
 	protected $hash = [];
 
 	/**
 	 * 错误信息.
+	 *
 	 * @var string
 	 */
 	private $error = '';
@@ -60,7 +66,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 设置上传信息.
+	 *
 	 * @param array $info 上传文件信息
+	 *
 	 * @return $this
 	 */
 	public function setUploadInfo($info)
@@ -72,7 +80,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 获取上传文件的信息.
+	 *
 	 * @param string $name
+	 *
 	 * @return array|string
 	 */
 	public function getInfo($name = '')
@@ -82,6 +92,7 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 获取上传文件的文件名.
+	 *
 	 * @return string
 	 */
 	public function getSaveName()
@@ -91,7 +102,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 设置上传文件的保存文件名.
+	 *
 	 * @param string $saveName
+	 *
 	 * @return $this
 	 */
 	public function setSaveName($saveName)
@@ -103,7 +116,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 获取文件的哈希散列值
+	 *
 	 * @param string $type
+	 *
 	 * @return string
 	 */
 	public function hash($type = 'sha1')
@@ -117,6 +132,7 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 获取文件类型信息.
+	 *
 	 * @return string
 	 */
 	public function getMime()
@@ -128,7 +144,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 设置文件的命名规则.
+	 *
 	 * @param string $rule 文件命名规则
+	 *
 	 * @return $this
 	 */
 	public function rule($rule)
@@ -140,7 +158,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 设置上传文件的验证规则.
+	 *
 	 * @param array $rule 验证规则
+	 *
 	 * @return $this
 	 */
 	public function validate($rule = [])
@@ -152,6 +172,7 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 检测是否合法的上传文件.
+	 *
 	 * @return bool
 	 */
 	public function isValid()
@@ -161,7 +182,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 检测上传文件.
+	 *
 	 * @param array $rule 验证规则
+	 *
 	 * @return bool
 	 */
 	public function check($rule = [])
@@ -180,7 +203,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 检测上传文件后缀
+	 *
 	 * @param array|string $ext 允许后缀
+	 *
 	 * @return bool
 	 */
 	public function checkExt($ext)
@@ -193,6 +218,7 @@ class Upload extends \SplFileObject
 
 		if (! in_array($extension, $ext)) {
 			$this->error = 'extensions to upload is not allowed';
+
 			return false;
 		}
 
@@ -201,15 +227,17 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 检测图像文件.
+	 *
 	 * @return bool
 	 */
 	public function checkImg()
 	{
 		$extension = strtolower(pathinfo($this->getInfo('name'), PATHINFO_EXTENSION));
 
-		/* 对图像文件进行严格检测 */
+		// 对图像文件进行严格检测
 		if (in_array($extension, ['gif', 'jpg', 'jpeg', 'bmp', 'png', 'swf']) && ! in_array($this->getImageType($this->filename), [1, 2, 3, 4, 6, 13])) {
 			$this->error = 'illegal image files';
+
 			return false;
 		}
 
@@ -218,13 +246,16 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 检测上传文件大小.
+	 *
 	 * @param int $size 最大大小
+	 *
 	 * @return bool
 	 */
 	public function checkSize($size)
 	{
 		if ($this->getSize() > (int) $size) {
 			$this->error = 'filesize not match';
+
 			return false;
 		}
 
@@ -233,7 +264,9 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 检测上传文件类型.
+	 *
 	 * @param array|string $mime 允许类型
+	 *
 	 * @return bool
 	 */
 	public function checkMime($mime)
@@ -244,6 +277,7 @@ class Upload extends \SplFileObject
 
 		if (! in_array(strtolower($this->getMime()), $mime)) {
 			$this->error = 'mimetype to upload is not allowed';
+
 			return false;
 		}
 
@@ -252,10 +286,12 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 移动文件.
-	 * @param string $path 保存路径
-	 * @param bool|string $savename 保存的文件名 默认自动生成
-	 * @param bool $replace 同名文件是否覆盖
-	 * @param bool $autoAppendExt 自动补充扩展名
+	 *
+	 * @param string      $path          保存路径
+	 * @param bool|string $savename      保存的文件名 默认自动生成
+	 * @param bool        $replace       同名文件是否覆盖
+	 * @param bool        $autoAppendExt 自动补充扩展名
+	 *
 	 * @return false|File false-失败 否则返回File实例
 	 */
 	public function move($path, $savename = true, $replace = true, $autoAppendExt = true)
@@ -263,12 +299,14 @@ class Upload extends \SplFileObject
 		// 文件上传失败，捕获错误代码
 		if (! empty($this->info['error'])) {
 			$this->error($this->info['error']);
+
 			return false;
 		}
 
 		// 检测合法性
 		if (! $this->isValid()) {
 			$this->error = 'upload illegal files';
+
 			return false;
 		}
 
@@ -283,19 +321,21 @@ class Upload extends \SplFileObject
 		$filename = $path . $saveName;
 
 		// 检测目录
-		if ($this->checkPath(dirname($filename)) === false) {
+		if (false === $this->checkPath(dirname($filename))) {
 			return false;
 		}
 
-		/* 不覆盖同名文件 */
+		// 不覆盖同名文件
 		if (! $replace && is_file($filename)) {
 			$this->error = ['has the same filename: {:filename}', ['filename' => $filename]];
+
 			return false;
 		}
 
-		/* 移动文件 */
+		// 移动文件
 		if (! move_uploaded_file($this->filename, $filename)) {
 			$this->error = 'upload write error';
+
 			return false;
 		}
 
@@ -309,6 +349,7 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 获取错误信息.
+	 *
 	 * @return string
 	 */
 	public function getError()
@@ -319,12 +360,15 @@ class Upload extends \SplFileObject
 			$msg = $this->error;
 			$vars = [];
 		}
+
 		return $msg;
 	}
 
 	/**
 	 * 检查目录是否可写.
+	 *
 	 * @param string $path 目录
+	 *
 	 * @return bool
 	 */
 	protected function checkPath($path)
@@ -338,6 +382,7 @@ class Upload extends \SplFileObject
 		}
 
 		$this->error = ['directory {:path} creation failed', ['path' => $path]];
+
 		return false;
 	}
 
@@ -350,6 +395,7 @@ class Upload extends \SplFileObject
 
 		try {
 			$info = getimagesize($image);
+
 			return $info ? $info[2] : false;
 		} catch (\Exception $e) {
 			return false;
@@ -358,21 +404,23 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 获取保存文件名.
-	 * @param bool|string $savename 保存的文件名 默认自动生成
-	 * @param bool $autoAppendExt 自动补充扩展名
+	 *
+	 * @param bool|string $savename      保存的文件名 默认自动生成
+	 * @param bool        $autoAppendExt 自动补充扩展名
+	 *
 	 * @return string
 	 */
 	protected function buildSaveName($savename, $autoAppendExt = true)
 	{
-		if ($savename === true) {
+		if (true === $savename) {
 			// 自动生成文件名
 			$savename = $this->autoBuildName();
-		} elseif ($savename === '' || $savename === false) {
+		} elseif ('' === $savename || false === $savename) {
 			// 保留原文件名
 			$savename = $this->getInfo('name');
 		}
 
-		if ($autoAppendExt && strpos($savename, '.') === false) {
+		if ($autoAppendExt && false === strpos($savename, '.')) {
 			$savename .= '.' . pathinfo($this->getInfo('name'), PATHINFO_EXTENSION);
 		}
 
@@ -381,6 +429,7 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 自动生成文件名.
+	 *
 	 * @return string
 	 */
 	protected function autoBuildName()
@@ -409,6 +458,7 @@ class Upload extends \SplFileObject
 
 	/**
 	 * 获取错误代码信息.
+	 *
 	 * @param int $errorNo 错误号
 	 */
 	private function error($errorNo)

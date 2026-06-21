@@ -1,8 +1,7 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils;
@@ -37,6 +36,7 @@ class Verify
 
 	/**
 	 * 架构方法 设置参数.
+	 *
 	 * @param array $config 配置参数
 	 */
 	public function __construct($config = [])
@@ -46,7 +46,9 @@ class Verify
 
 	/**
 	 * 使用 $this->name 获取配置.
+	 *
 	 * @param string $name 配置名称
+	 *
 	 * @return multitype 配置值
 	 */
 	public function __get($name)
@@ -56,7 +58,8 @@ class Verify
 
 	/**
 	 * 设置验证码配置.
-	 * @param string $name 配置名称
+	 *
+	 * @param string $name  配置名称
 	 * @param string $value 配置值
 	 */
 	public function __set($name, $value)
@@ -68,7 +71,9 @@ class Verify
 
 	/**
 	 * 检查配置.
+	 *
 	 * @param string $name 配置名称
+	 *
 	 * @return bool
 	 */
 	public function __isset($name)
@@ -78,8 +83,10 @@ class Verify
 
 	/**
 	 * 验证验证码是否正确.
+	 *
 	 * @param string $code 用户验证码
-	 * @param string $id 验证码标识
+	 * @param string $id   验证码标识
+	 *
 	 * @return bool 用户验证码是否正确
 	 */
 	public function check($code, $id = '')
@@ -99,10 +106,12 @@ class Verify
 		// session 过期
 		if (time() - $secode['verify_time'] > $this->expire) {
 			$_SESSION[$this->_prefix][$key] = [];
+
 			return false;
 		}
 		if ($this->authcode(strtoupper($code)) == $secode['verify_code']) {
 			$this->reset && ($_SESSION[$this->_prefix][$key] = []);
+
 			return true;
 		}
 
@@ -112,6 +121,7 @@ class Verify
 	/**
 	 * 输出验证码并把验证码的值保存的session中
 	 * 验证码保存到session的格式为： array('verify_code' => '验证码值', 'verify_time' => '验证码创建时间');.
+	 *
 	 * @param string $id 要生成验证码的标识
 	 */
 	public function entry($id = '')
@@ -134,7 +144,7 @@ class Verify
 			$dir = dir($ttfPath);
 			$ttfs = [];
 			while (false !== ($file = $dir->read())) {
-				if ($file[0] != '.' && substr($file, -4) == '.ttf') {
+				if ('.' != $file[0] && '.ttf' == substr($file, -4)) {
 					$ttfs[] = $file;
 				}
 			}
@@ -214,7 +224,7 @@ class Verify
 		$px2 = mt_rand($this->imageW / 2, $this->imageW * 0.8);  // 曲线横坐标结束位置
 
 		for ($px = $px1; $px <= $px2; $px = $px + 1) {
-			if ($w != 0) {
+			if (0 != $w) {
 				$py = $A * sin($w * $px + $f) + $b + $this->imageH / 2;  // y = Asin(ωx+φ) + b
 				$i = (int) ($this->fontSize / 5);
 				while ($i > 0) {
@@ -234,7 +244,7 @@ class Verify
 		$px2 = $this->imageW;
 
 		for ($px = $px1; $px <= $px2; $px = $px + 1) {
-			if ($w != 0) {
+			if (0 != $w) {
 				$py = $A * sin($w * $px + $f) + $b + $this->imageH / 2;  // y = Asin(ωx+φ) + b
 				$i = (int) ($this->fontSize / 5);
 				while ($i > 0) {
@@ -273,7 +283,7 @@ class Verify
 
 		$bgs = [];
 		while (false !== ($file = $dir->read())) {
-			if ($file[0] != '.' && substr($file, -4) == '.jpg') {
+			if ('.' != $file[0] && '.jpg' == substr($file, -4)) {
 				$bgs[] = $path . $file;
 			}
 		}
@@ -288,11 +298,12 @@ class Verify
 		@imagedestroy($bgImage);
 	}
 
-	/* 加密验证码 */
+	// 加密验证码
 	private function authcode($str)
 	{
 		$key = substr(md5($this->seKey), 5, 8);
 		$str = substr(md5($str), 8, 10);
+
 		return md5($key . $str);
 	}
 }

@@ -1,20 +1,16 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils;
 
 use Colaphp\Utils\Image\Gif;
 
-/**
- * 图像操作类.
- */
 class Image
 {
-	/* 缩略图相关常量定义 */
+	// 缩略图相关常量定义
 	public const THUMB_SCALING = 1; // 常量，标识缩略图等比例缩放类型
 
 	public const THUMB_FILLED = 2; // 常量，标识缩略图缩放后填充类型
@@ -28,7 +24,7 @@ class Image
 	public const THUMB_FIXED = 6;
 
 	// 常量，标识缩略图固定尺寸缩放类型
-	/* 水印相关常量定义 */
+	// 水印相关常量定义
 	public const WATER_NORTHWEST = 1; // 常量，标识左上角水印
 
 	public const WATER_NORTH = 2; // 常量，标识上居中水印
@@ -48,7 +44,7 @@ class Image
 	public const WATER_SOUTHEAST = 9;
 
 	// 常量，标识右下角水印
-	/* 翻转相关常量定义 */
+	// 翻转相关常量定义
 	public const FLIP_X = 1; // X轴翻转
 
 	public const FLIP_Y = 2; // Y轴翻转
@@ -80,7 +76,7 @@ class Image
 		$info = @getimagesize($file->getPathname());
 
 		// 检测图像合法性
-		if ($info === false || ($info[2] === IMAGETYPE_GIF && empty($info['bits']))) {
+		if (false === $info || (IMAGETYPE_GIF === $info[2] && empty($info['bits']))) {
 			throw new \RuntimeException('Illegal image file');
 		}
 
@@ -93,7 +89,7 @@ class Image
 		];
 
 		// 打开图像
-		if ($this->info['type'] == 'gif') {
+		if ('gif' == $this->info['type']) {
 			$this->gif = new Gif($file->getPathname());
 			$this->im = @imagecreatefromstring($this->gif->image());
 		} else {
@@ -116,7 +112,9 @@ class Image
 
 	/**
 	 * 打开一个图片文件.
+	 *
 	 * @param \SplFileInfo|string $file
+	 *
 	 * @return Image
 	 */
 	public static function open($file)
@@ -127,15 +125,18 @@ class Image
 		if (! $file->isFile()) {
 			throw new \RuntimeException('image file not exist');
 		}
+
 		return new self($file);
 	}
 
 	/**
 	 * 保存图像.
-	 * @param string $pathname 图像保存路径名称
-	 * @param null|string $type 图像类型
-	 * @param int $quality 图像质量
-	 * @param bool $interlace 是否对JPEG类型图像设置隔行扫描
+	 *
+	 * @param string      $pathname  图像保存路径名称
+	 * @param null|string $type      图像类型
+	 * @param int         $quality   图像质量
+	 * @param bool        $interlace 是否对JPEG类型图像设置隔行扫描
+	 *
 	 * @return $this
 	 */
 	public function save($pathname, $type = null, $quality = 80, $interlace = true)
@@ -147,13 +148,13 @@ class Image
 			$type = strtolower($type);
 		}
 		// 保存图像
-		if ($type == 'jpeg' || $type == 'jpg') {
+		if ('jpeg' == $type || 'jpg' == $type) {
 			// JPEG图像设置隔行扫描
 			imageinterlace($this->im, $interlace);
 			imagejpeg($this->im, $pathname, $quality);
-		} elseif ($type == 'gif' && ! empty($this->gif)) {
+		} elseif ('gif' == $type && ! empty($this->gif)) {
 			$this->gif->save($pathname);
-		} elseif ($type == 'png') {
+		} elseif ('png' == $type) {
 			// 设定保存完整的 alpha 通道信息
 			imagesavealpha($this->im, true);
 			// ImagePNG生成图像的质量范围从0到9的
@@ -168,6 +169,7 @@ class Image
 
 	/**
 	 * 返回图像宽度.
+	 *
 	 * @return int 图像宽度
 	 */
 	public function width()
@@ -177,6 +179,7 @@ class Image
 
 	/**
 	 * 返回图像高度.
+	 *
 	 * @return int 图像高度
 	 */
 	public function height()
@@ -186,6 +189,7 @@ class Image
 
 	/**
 	 * 返回图像类型.
+	 *
 	 * @return string 图像类型
 	 */
 	public function type()
@@ -195,6 +199,7 @@ class Image
 
 	/**
 	 * 返回图像MIME类型.
+	 *
 	 * @return string 图像MIME类型
 	 */
 	public function mime()
@@ -204,6 +209,7 @@ class Image
 
 	/**
 	 * 返回图像尺寸数组 0 - 图像宽度，1 - 图像高度.
+	 *
 	 * @return array 图像尺寸
 	 */
 	public function size()
@@ -213,7 +219,9 @@ class Image
 
 	/**
 	 * 旋转图像.
+	 *
 	 * @param int $degrees 顺时针旋转的度数
+	 *
 	 * @return $this
 	 */
 	public function rotate($degrees = 90)
@@ -232,7 +240,9 @@ class Image
 
 	/**
 	 * 翻转图像.
+	 *
 	 * @param int $direction 翻转轴,X或者Y
+	 *
 	 * @return $this
 	 */
 	public function flip($direction = self::FLIP_X)
@@ -269,11 +279,11 @@ class Image
 	/**
 	 * 裁剪图像.
 	 *
-	 * @param int $w 裁剪区域宽度
-	 * @param int $h 裁剪区域高度
-	 * @param int $x 裁剪区域x坐标
-	 * @param int $y 裁剪区域y坐标
-	 * @param int $width 图像保存宽度
+	 * @param int $w      裁剪区域宽度
+	 * @param int $h      裁剪区域高度
+	 * @param int $x      裁剪区域x坐标
+	 * @param int $y      裁剪区域y坐标
+	 * @param int $width  图像保存宽度
 	 * @param int $height 图像保存高度
 	 *
 	 * @return $this
@@ -297,15 +307,16 @@ class Image
 		} while (! empty($this->gif) && $this->gifNext());
 		$this->info['width'] = (int) $width;
 		$this->info['height'] = (int) $height;
+
 		return $this;
 	}
 
 	/**
 	 * 生成缩略图.
 	 *
-	 * @param int $width 缩略图最大宽度
+	 * @param int $width  缩略图最大宽度
 	 * @param int $height 缩略图最大高度
-	 * @param int $type 缩略图裁剪类型
+	 * @param int $type   缩略图裁剪类型
 	 *
 	 * @return $this
 	 */
@@ -314,9 +325,9 @@ class Image
 		// 原图宽度和高度
 		$w = $this->info['width'];
 		$h = $this->info['height'];
-		/* 计算缩略图生成的必要参数 */
+		// 计算缩略图生成的必要参数
 		switch ($type) {
-			/* 等比例缩放 */
+			// 等比例缩放
 			case self::THUMB_SCALING:
 				// 原图尺寸小于缩略图尺寸则不进行缩略
 				if ($w < $width && $h < $height) {
@@ -329,7 +340,7 @@ class Image
 				$width = $w * $scale;
 				$height = $h * $scale;
 				break;
-				/* 居中裁剪 */
+				// 居中裁剪
 			case self::THUMB_CENTER:
 				// 计算缩放比例
 				$scale = max($width / $w, $height / $h);
@@ -339,7 +350,7 @@ class Image
 				$x = ($this->info['width'] - $w) / 2;
 				$y = ($this->info['height'] - $h) / 2;
 				break;
-				/* 左上角裁剪 */
+				// 左上角裁剪
 			case self::THUMB_NORTHWEST:
 				// 计算缩放比例
 				$scale = max($width / $w, $height / $h);
@@ -348,7 +359,7 @@ class Image
 				$w = $width / $scale;
 				$h = $height / $scale;
 				break;
-				/* 右下角裁剪 */
+				// 右下角裁剪
 			case self::THUMB_SOUTHEAST:
 				// 计算缩放比例
 				$scale = max($width / $w, $height / $h);
@@ -358,7 +369,7 @@ class Image
 				$x = $this->info['width'] - $w;
 				$y = $this->info['height'] - $h;
 				break;
-				/* 填充 */
+				// 填充
 			case self::THUMB_FILLED:
 				// 计算缩放比例
 				if ($w < $width && $h < $height) {
@@ -386,16 +397,18 @@ class Image
 				} while (! empty($this->gif) && $this->gifNext());
 				$this->info['width'] = (int) $width;
 				$this->info['height'] = (int) $height;
+
 				return $this;
-				/* 固定 */
+				// 固定
 			case self::THUMB_FIXED:
 				$x = $y = 0;
 				break;
 			default:
 				throw new \RuntimeException('不支持的缩略图裁剪类型');
 		}
-		/* 裁剪图像 */
+		// 裁剪图像
 		$this->crop($w, $h, $x, $y, $width, $height);
+
 		return $this;
 	}
 
@@ -403,8 +416,9 @@ class Image
 	 * 添加水印.
 	 *
 	 * @param string $source 水印图片路径
-	 * @param int $locate 水印位置
-	 * @param int $alpha 透明度
+	 * @param int    $locate 水印位置
+	 * @param int    $alpha  透明度
+	 *
 	 * @return $this
 	 */
 	public function water($source, $locate = self::WATER_SOUTHEAST, $alpha = 100)
@@ -414,7 +428,7 @@ class Image
 		}
 		// 获取水印图像信息
 		$info = getimagesize($source);
-		if ($info === false || ($info[2] === IMAGETYPE_GIF && empty($info['bits']))) {
+		if (false === $info || (IMAGETYPE_GIF === $info[2] && empty($info['bits']))) {
 			throw new \RuntimeException('非法水印文件');
 		}
 		// 创建水印图像资源
@@ -422,54 +436,54 @@ class Image
 		$water = $fun($source);
 		// 设定水印图像的混色模式
 		imagealphablending($water, true);
-		/* 设定水印位置 */
+		// 设定水印位置
 		switch ($locate) {
-			/* 右下角水印 */
+			// 右下角水印
 			case self::WATER_SOUTHEAST:
 				$x = $this->info['width'] - $info[0];
 				$y = $this->info['height'] - $info[1];
 				break;
-				/* 左下角水印 */
+				// 左下角水印
 			case self::WATER_SOUTHWEST:
 				$x = 0;
 				$y = $this->info['height'] - $info[1];
 				break;
-				/* 左上角水印 */
+				// 左上角水印
 			case self::WATER_NORTHWEST:
 				$x = $y = 0;
 				break;
-				/* 右上角水印 */
+				// 右上角水印
 			case self::WATER_NORTHEAST:
 				$x = $this->info['width'] - $info[0];
 				$y = 0;
 				break;
-				/* 居中水印 */
+				// 居中水印
 			case self::WATER_CENTER:
 				$x = ($this->info['width'] - $info[0]) / 2;
 				$y = ($this->info['height'] - $info[1]) / 2;
 				break;
-				/* 下居中水印 */
+				// 下居中水印
 			case self::WATER_SOUTH:
 				$x = ($this->info['width'] - $info[0]) / 2;
 				$y = $this->info['height'] - $info[1];
 				break;
-				/* 右居中水印 */
+				// 右居中水印
 			case self::WATER_EAST:
 				$x = $this->info['width'] - $info[0];
 				$y = ($this->info['height'] - $info[1]) / 2;
 				break;
-				/* 上居中水印 */
+				// 上居中水印
 			case self::WATER_NORTH:
 				$x = ($this->info['width'] - $info[0]) / 2;
 				$y = 0;
 				break;
-				/* 左居中水印 */
+				// 左居中水印
 			case self::WATER_WEST:
 				$x = 0;
 				$y = ($this->info['height'] - $info[1]) / 2;
 				break;
 			default:
-				/* 自定义水印坐标 */
+				// 自定义水印坐标
 				if (is_array($locate)) {
 					[$x, $y] = $locate;
 				} else {
@@ -490,21 +504,23 @@ class Image
 		} while (! empty($this->gif) && $this->gifNext());
 		// 销毁水印资源
 		imagedestroy($water);
+
 		return $this;
 	}
 
 	/**
 	 * 图像添加文字.
 	 *
-	 * @param string $text 添加的文字
-	 * @param string $font 字体路径
-	 * @param int $size 字号
-	 * @param string $color 文字颜色
-	 * @param int $locate 文字写入位置
-	 * @param int $offset 文字相对当前位置的偏移量
-	 * @param int $angle 文字倾斜角度
+	 * @param string $text   添加的文字
+	 * @param string $font   字体路径
+	 * @param int    $size   字号
+	 * @param string $color  文字颜色
+	 * @param int    $locate 文字写入位置
+	 * @param int    $offset 文字相对当前位置的偏移量
+	 * @param int    $angle  文字倾斜角度
 	 *
 	 * @return $this
+	 *
 	 * @throws \RuntimeException
 	 */
 	public function text($text, $font, $size, $color = '#00000000', $locate = self::WATER_SOUTHEAST, $offset = 0, $angle = 0)
@@ -518,55 +534,55 @@ class Image
 		$maxx = max($info[0], $info[2], $info[4], $info[6]);
 		$miny = min($info[1], $info[3], $info[5], $info[7]);
 		$maxy = max($info[1], $info[3], $info[5], $info[7]);
-		/* 计算文字初始坐标和尺寸 */
+		// 计算文字初始坐标和尺寸
 		$x = $minx;
 		$y = abs($miny);
 		$w = $maxx - $minx;
 		$h = $maxy - $miny;
-		/* 设定文字位置 */
+		// 设定文字位置
 		switch ($locate) {
-			/* 右下角文字 */
+			// 右下角文字
 			case self::WATER_SOUTHEAST:
 				$x += $this->info['width'] - $w;
 				$y += $this->info['height'] - $h;
 				break;
-				/* 左下角文字 */
+				// 左下角文字
 			case self::WATER_SOUTHWEST:
 				$y += $this->info['height'] - $h;
 				break;
-				/* 左上角文字 */
+				// 左上角文字
 			case self::WATER_NORTHWEST:
 				// 起始坐标即为左上角坐标，无需调整
 				break;
-				/* 右上角文字 */
+				// 右上角文字
 			case self::WATER_NORTHEAST:
 				$x += $this->info['width'] - $w;
 				break;
-				/* 居中文字 */
+				// 居中文字
 			case self::WATER_CENTER:
 				$x += ($this->info['width'] - $w) / 2;
 				$y += ($this->info['height'] - $h) / 2;
 				break;
-				/* 下居中文字 */
+				// 下居中文字
 			case self::WATER_SOUTH:
 				$x += ($this->info['width'] - $w) / 2;
 				$y += $this->info['height'] - $h;
 				break;
-				/* 右居中文字 */
+				// 右居中文字
 			case self::WATER_EAST:
 				$x += $this->info['width'] - $w;
 				$y += ($this->info['height'] - $h) / 2;
 				break;
-				/* 上居中文字 */
+				// 上居中文字
 			case self::WATER_NORTH:
 				$x += ($this->info['width'] - $w) / 2;
 				break;
-				/* 左居中文字 */
+				// 左居中文字
 			case self::WATER_WEST:
 				$y += ($this->info['height'] - $h) / 2;
 				break;
 			default:
-				/* 自定义文字坐标 */
+				// 自定义文字坐标
 				if (is_array($locate)) {
 					[$posx, $posy] = $locate;
 					$x += $posx;
@@ -575,7 +591,7 @@ class Image
 					throw new \RuntimeException('不支持的文字位置类型');
 				}
 		}
-		/* 设置偏移量 */
+		// 设置偏移量
 		if (is_array($offset)) {
 			$offset = array_map('intval', $offset);
 			[$ox, $oy] = $offset;
@@ -583,8 +599,8 @@ class Image
 			$offset = intval($offset);
 			$ox = $oy = $offset;
 		}
-		/* 设置颜色 */
-		if (is_string($color) && strpos($color, '#') === 0) {
+		// 设置颜色
+		if (is_string($color) && 0 === strpos($color, '#')) {
 			$color = str_split(substr($color, 1), 2);
 			$color = array_map('hexdec', $color);
 			if (empty($color[3]) || $color[3] > 127) {
@@ -594,10 +610,11 @@ class Image
 			throw new \RuntimeException('错误的颜色值');
 		}
 		do {
-			/* 写入文字 */
+			// 写入文字
 			$col = imagecolorallocatealpha($this->im, $color[0], $color[1], $color[2], $color[3]);
 			imagettftext($this->im, $size, $angle, $x + $ox, $y + $oy, $col, $font, $text);
 		} while (! empty($this->gif) && $this->gifNext());
+
 		return $this;
 	}
 
@@ -615,10 +632,12 @@ class Image
 		if ($next) {
 			imagedestroy($this->im);
 			$this->im = imagecreatefromstring($next);
+
 			return $next;
 		}
 		imagedestroy($this->im);
 		$this->im = imagecreatefromstring($this->gif->image());
+
 		return false;
 	}
 }

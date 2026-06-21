@@ -1,22 +1,20 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils;
 
-/**
- * Base64 加密实现类.
- */
 class Base64
 {
 	/**
 	 * 加密字符串.
-	 * @param string $key 加密key
-	 * @param int $expire 有效期（秒）
-	 * @param mixed $data
+	 *
+	 * @param string $key    加密key
+	 * @param int    $expire 有效期（秒）
+	 * @param mixed  $data
+	 *
 	 * @return string
 	 */
 	public static function encrypt($data, $key = '', $expire = 0)
@@ -40,13 +38,16 @@ class Base64
 		for ($i = 0; $i < $len; ++$i) {
 			$str .= chr(ord(substr($data, $i, 1)) + ord(substr($char, $i, 1)) % 256);
 		}
+
 		return $str;
 	}
 
 	/**
 	 * 解密字符串.
-	 * @param string $key 加密key
-	 * @param mixed $data
+	 *
+	 * @param string $key  加密key
+	 * @param mixed  $data
+	 *
 	 * @return string
 	 */
 	public static function decrypt($data, $key = '')
@@ -76,6 +77,7 @@ class Base64
 		if ($expire > 0 && $expire < time()) {
 			return '';
 		}
+
 		return substr($data, 10);
 	}
 }

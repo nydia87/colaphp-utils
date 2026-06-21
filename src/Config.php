@@ -1,8 +1,7 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils;
@@ -11,30 +10,35 @@ class Config
 {
 	/**
 	 * 配置参数.
+	 *
 	 * @var array
 	 */
 	protected static $config = [];
 
 	/**
 	 * @param string $file 配置文件名
-	 * @param mixed $name
+	 * @param mixed  $name
+	 *
 	 * @return mixed
 	 */
 	public static function load($file, $name = '')
 	{
 		if (is_file($file)) {
 			$type = pathinfo($file, PATHINFO_EXTENSION);
-			if ($type == 'php') {
+			if ('php' == $type) {
 				return self::set($name, include $file);
 			}
 		}
+
 		return self::$config;
 	}
 
 	/**
 	 * 获取配置参数 为空则获取所有配置.
-	 * @param string $name 配置参数名（支持多级配置 .号分割）
-	 * @param mixed $default 默认值
+	 *
+	 * @param string $name    配置参数名（支持多级配置 .号分割）
+	 * @param mixed  $default 默认值
+	 *
 	 * @return mixed
 	 */
 	public static function get($name = null, $default = null)
@@ -44,7 +48,7 @@ class Config
 			return self::$config;
 		}
 		// 返回一级
-		if ($name && strpos($name, '.') === false) {
+		if ($name && false === strpos($name, '.')) {
 			return self::$config[strtolower($name)];
 		}
 		$name = explode('.', $name);
@@ -58,28 +62,32 @@ class Config
 				return $default;
 			}
 		}
+
 		return $config;
 	}
 
 	/**
 	 * 设置配置参数 name为数组则为批量设置.
-	 * @param array|string $name 配置参数名（支持三级配置 .号分割）
-	 * @param mixed $value 配置值
+	 *
+	 * @param array|string $name  配置参数名（支持三级配置 .号分割）
+	 * @param mixed        $value 配置值
+	 *
 	 * @return mixed
 	 */
 	public static function set($name, $value = null)
 	{
 		if (is_string($name)) {
-			if (strpos($name, '.') === false) {
+			if (false === strpos($name, '.')) {
 				self::$config[strtolower($name)] = $value;
 			} else {
 				$name = explode('.', $name, 3);
-				if (count($name) == 2) {
+				if (2 == count($name)) {
 					self::$config[strtolower($name[0])][$name[1]] = $value;
 				} else {
 					self::$config[strtolower($name[0])][$name[1]][$name[2]] = $value;
 				}
 			}
+
 			return $value;
 		}
 		if (is_array($name)) {
@@ -98,20 +106,22 @@ class Config
 			// 为空直接返回 已有配置
 			$result = self::$config;
 		}
+
 		return $result;
 	}
 
 	/**
 	 * 移除配置.
+	 *
 	 * @param string $name 配置参数名（支持三级配置 .号分割）
 	 */
-	public static function remove($name)
+	public static function remove(string $name)
 	{
-		if (strpos($name, '.') === false) {
+		if (false === strpos($name, '.')) {
 			unset(self::$config[strtolower($name)]);
 		} else {
 			$name = explode('.', $name, 3);
-			if (count($name) == 2) {
+			if (2 == count($name)) {
 				unset(self::$config[strtolower($name[0])][$name[1]]);
 			} else {
 				unset(self::$config[strtolower($name[0])][$name[1]][$name[2]]);

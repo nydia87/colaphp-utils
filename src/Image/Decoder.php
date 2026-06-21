@@ -1,15 +1,11 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils\Image;
 
-/**
- * GIF解码
- */
 class Decoder
 {
 	public $GIF_buffer = [];
@@ -46,7 +42,7 @@ class Decoder
 		$this->GIF_sorted = $this->GIF_buffer[4] & 0x08 ? 1 : 0;
 		$this->GIF_colorC = $this->GIF_buffer[4] & 0x07;
 		$this->GIF_colorS = 2 << $this->GIF_colorC;
-		if ($this->GIF_colorF == 1) {
+		if (1 == $this->GIF_colorF) {
 			$this->getByte(3 * $this->GIF_colorS);
 			$this->GIF_global = $this->GIF_buffer;
 		}
@@ -79,7 +75,7 @@ class Decoder
 				break;
 			}
 			$this->getByte($u);
-			if ($u == 4) {
+			if (4 == $u) {
 				$this->GIF_delays[] = ($this->GIF_buffer[1] | $this->GIF_buffer[2] << 8);
 			}
 		}
@@ -106,7 +102,7 @@ class Decoder
 		}
 		$this->GIF_string = 'GIF87a';
 		$this->putByte($this->GIF_screen);
-		if ($GIF_colorF == 1) {
+		if (1 == $GIF_colorF) {
 			$this->getByte(3 * $GIF_size);
 			$this->putByte($this->GIF_buffer);
 		} else {
@@ -140,6 +136,7 @@ class Decoder
 			}
 			$this->GIF_buffer[] = ord($this->GIF_stream[$this->GIF_bfseek++]);
 		}
+
 		return 1;
 	}
 

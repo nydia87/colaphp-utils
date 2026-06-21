@@ -1,15 +1,11 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils\Image;
 
-/**
- * GIF编码
- */
 class Encoder
 {
 	// GIF header 6 bytes
@@ -54,22 +50,22 @@ class Encoder
 		$this->COL = ($GIF_red > -1 && $GIF_grn > -1 && $GIF_blu > -1)
 			? ($GIF_red | ($GIF_grn << 8) | ($GIF_blu << 16)) : -1;
 		for ($i = 0; $i < count($GIF_src); ++$i) {
-			if (strtolower($GIF_mod) == 'url') {
+			if ('url' == strtolower($GIF_mod)) {
 				$this->BUF[] = fread(fopen($GIF_src[$i], 'rb'), filesize($GIF_src[$i]));
-			} elseif (strtolower($GIF_mod) == 'bin') {
+			} elseif ('bin' == strtolower($GIF_mod)) {
 				$this->BUF[] = $GIF_src[$i];
 			} else {
 				printf('%s: %s ( %s )!', $this->VER, $this->ERR['ERR02'], $GIF_mod);
 				exit(0);
 			}
-			if (substr($this->BUF[$i], 0, 6) != 'GIF87a' && substr($this->BUF[$i], 0, 6) != 'GIF89a') {
+			if ('GIF87a' != substr($this->BUF[$i], 0, 6) && 'GIF89a' != substr($this->BUF[$i], 0, 6)) {
 				printf('%s: %d %s', $this->VER, $i, $this->ERR['ERR01']);
 				exit(0);
 			}
 			for ($j = (13 + 3 * (2 << (ord($this->BUF[$i][10]) & 0x07))), $k = true; $k; ++$j) {
 				switch ($this->BUF[$i][$j]) {
 					case '!':
-						if (substr($this->BUF[$i], $j + 3, 8) == 'NETSCAPE') {
+						if ('NETSCAPE' == substr($this->BUF[$i], $j + 3, 8)) {
 							printf('%s: %s ( %s source )!', $this->VER, $this->ERR['ERR03'], $i + 1);
 							exit(0);
 						}
@@ -182,6 +178,7 @@ class Encoder
 				return 0;
 			}
 		}
+
 		return 1;
 	}
 

@@ -1,15 +1,11 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils\Image;
 
-/**
- * GIF类.
- */
 class Gif
 {
 	/**
@@ -31,15 +27,17 @@ class Gif
 	 *
 	 * @param string $src GIF图片数据
 	 * @param string $mod 图片数据类型
+	 *
 	 * @throws \Exception
 	 */
 	public function __construct($src = null, $mod = 'url')
 	{
 		if (! is_null($src)) {
-			if ($mod == 'url' && is_file($src)) {
+			if ('url' == $mod && is_file($src)) {
 				$src = file_get_contents($src);
 			}
-			/* 解码GIF图片 */
+
+			// 解码GIF图片
 			try {
 				$de = new Decoder($src);
 				$this->frames = $de->getFrames();
@@ -54,13 +52,15 @@ class Gif
 	 * 设置或获取当前帧的数据.
 	 *
 	 * @param string $stream 二进制数据流
+	 *
 	 * @return mixed 获取到的数据
 	 */
 	public function image($stream = null)
 	{
 		if (is_null($stream)) {
 			$current = current($this->frames);
-			return $current === false ? reset($this->frames) : $current;
+
+			return false === $current ? reset($this->frames) : $current;
 		}
 		$this->frames[key($this->frames)] = $stream;
 	}

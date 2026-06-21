@@ -1,15 +1,11 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils;
 
-/**
- * 本地输出到文件.
- */
 class File
 {
 	// 配置信息
@@ -35,15 +31,17 @@ class File
 			throw new \LogicException('Class File need `path`.');
 		}
 
-		if (substr($this->config['path'], -1) != DIRECTORY_SEPARATOR) {
+		if (DIRECTORY_SEPARATOR != substr($this->config['path'], -1)) {
 			$this->config['path'] .= DIRECTORY_SEPARATOR;
 		}
 	}
 
 	/**
 	 * 日志写入接口.
-	 * @param array $log 日志信息
-	 * @param bool $append 是否追加请求信息
+	 *
+	 * @param array $log    日志信息
+	 * @param bool  $append 是否追加请求信息
+	 *
 	 * @return bool
 	 */
 	public function save(array $log = [], $append = false)
@@ -64,7 +62,7 @@ class File
 				$info[$type][] = $this->config['json'] ? $msg : '[ ' . $type . ' ] ' . $msg;
 			}
 
-			if (! $this->config['json'] && ($this->config['apart_level'] === true || in_array($type, $this->config['apart_level']))) {
+			if (! $this->config['json'] && (true === $this->config['apart_level'] || in_array($type, $this->config['apart_level']))) {
 				// 独立记录的日志级别
 				$filename = $this->getApartLevelFile($path, $type);
 
@@ -83,10 +81,12 @@ class File
 
 	/**
 	 * 日志写入.
-	 * @param array $message 日志信息
+	 *
+	 * @param array  $message     日志信息
 	 * @param string $destination 日志文件
-	 * @param bool $apart 是否独立文件写入
-	 * @param bool $append 是否追加请求信息
+	 * @param bool   $apart       是否独立文件写入
+	 * @param bool   $append      是否追加请求信息
+	 *
 	 * @return bool
 	 */
 	protected function write($message, $destination, $apart = false, $append = false)
@@ -118,6 +118,7 @@ class File
 
 	/**
 	 * 获取主日志文件名.
+	 *
 	 * @return string
 	 */
 	protected function getMasterLogFile()
@@ -137,8 +138,10 @@ class File
 
 	/**
 	 * 获取独立日志文件名.
+	 *
 	 * @param string $path 日志目录
 	 * @param string $type 日志类型
+	 *
 	 * @return string
 	 */
 	protected function getApartLevelFile($path, $type)
@@ -156,6 +159,7 @@ class File
 
 	/**
 	 * 检查日志文件大小并自动生成备份文件.
+	 *
 	 * @param string $destination 日志文件
 	 */
 	protected function checkLogSize($destination)
@@ -170,7 +174,9 @@ class File
 
 	/**
 	 * CLI日志解析.
+	 *
 	 * @param array $info 日志信息
+	 *
 	 * @return string
 	 */
 	protected function parseCliLog($info)
@@ -191,7 +197,9 @@ class File
 
 	/**
 	 * 日志解析.
+	 *
 	 * @param array $info 日志信息
+	 *
 	 * @return string
 	 */
 	protected function parseLog($info)

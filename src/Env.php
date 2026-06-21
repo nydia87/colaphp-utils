@@ -1,8 +1,7 @@
 <?php
-
 /**
- * @contact  nydia87 <349196713@qq.com>
- * @license  http://www.apache.org/licenses/LICENSE-2.0
+ * @author: nydia87 <349196713@qq.com>
+ * @description:
  */
 
 namespace Colaphp\Utils;
@@ -11,12 +10,14 @@ class Env
 {
 	/**
 	 * 环境变量数据.
+	 *
 	 * @var array
 	 */
 	protected static $data = [];
 
 	/**
 	 * 读取环境变量定义文件.
+	 *
 	 * @param string $file 环境变量定义文件
 	 */
 	public static function load($file)
@@ -27,8 +28,9 @@ class Env
 
 	/**
 	 * 设置环境变量值
-	 * @param array|string $env 环境变量
-	 * @param mixed $value 值
+	 *
+	 * @param array|string $env   环境变量
+	 * @param mixed        $value 值
 	 */
 	public static function set($env, $value = null)
 	{
@@ -53,9 +55,11 @@ class Env
 
 	/**
 	 * 获取环境变量值
-	 * @param string $name 环境变量名
-	 * @param mixed $default 默认值
-	 * @param mixed $php_prefix
+	 *
+	 * @param string $name       环境变量名
+	 * @param mixed  $default    默认值
+	 * @param mixed  $php_prefix
+	 *
 	 * @return mixed
 	 */
 	public static function get($name = null, $default = null, $php_prefix = true)
@@ -81,13 +85,13 @@ class Env
 
 		$result = getenv($name);
 
-		if ($result === false) {
+		if (false === $result) {
 			return $default;
 		}
 
-		if ($result === 'false') {
+		if ('false' === $result) {
 			$result = false;
-		} elseif ($result === 'true') {
+		} elseif ('true' === $result) {
 			$result = true;
 		}
 
